@@ -23,39 +23,99 @@
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Agregar procedimiento</h2>
                 </div>
             </div>
-            <div class="p-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <flux:input type="text" label="Anestesia" wire:model="anesthesia" />
-                    <flux:input type="number" label="Tiempo de cirugía (min)" wire:model="surgery_time_min" />
-                    <flux:input type="number" label="Tiempo de cirugía (max)" wire:model="surgery_time_max" />
-                    <flux:input type="text" label="Hospitalización" wire:model="hospitalization" />
-                    <flux:input type="number" label="Recuperación inicial (semanas)"
-                        wire:model="initial_recovery_weeks" />
-                    <flux:input type="number" label="Resultados finales (semanas)" wire:model="final_results_weeks" />
-                    <flux:select label="Nivel de riesgo" wire:model="risk_level">
-                        <option value="">Seleccione un nivel de riesgo</option>
-                        <option value="bajo">Bajo</option>
-                        <option value="medio">Medio</option>
-                        <option value="alto">Alto</option>
-                    </flux:select>
+            <div class="p-6">
+                <form wire:submit.prevent="create" class="space-y-8">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <flux:input type="text" label="Nombre" wire:model.defer="name" />
+                        <flux:input type="text" label="Categoría" wire:model.defer="category" />
+                        <flux:input type="text" label="Anestesia" wire:model.defer="anesthesia" />
+                        <flux:input type="text" label="Hospitalización" wire:model.defer="hospitalization" />
+                        <flux:input type="number" min="0" label="Tiempo de cirugía (min)" wire:model.defer="surgery_time_min" />
+                        <flux:input type="number" min="0" label="Tiempo de cirugía (max)" wire:model.defer="surgery_time_max" />
+                        <flux:input type="number" min="0" label="Recuperación inicial (semanas)" wire:model.defer="initial_recovery_weeks" />
+                        <flux:input type="number" min="0" label="Resultados finales (semanas)" wire:model.defer="final_results_weeks" />
+                        <flux:select label="Nivel de riesgo" wire:model.defer="risk_level">
+                            <option value="">Seleccione un nivel de riesgo</option>
+                            <option value="bajo">Bajo</option>
+                            <option value="medio">Medio</option>
+                            <option value="alto">Alto</option>
+                        </flux:select>
+                        <flux:select label="Estado" wire:model.defer="is_active">
+                            <option value="true">Activo</option>
+                            <option value="false">Inactivo</option>
+                        </flux:select>
+                    </div>
 
-                    <flux:select label="Estado" wire:model="is_active">
-                        <option value="">Seleccione un estado</option>
-                        <option value="true">Activo</option>
-                        <option value="false">Inactivo</option>
-                    </flux:select>
+                    <div class="space-y-4">
+                        <flux:textarea label="Resumen" wire:model.defer="summary" />
+                        <flux:textarea label="Descripción" wire:model.defer="description" />
+                    </div>
 
-                    <flux:input type="text" label="Nombre" wire:model="name" />
-                    <flux:input type="textarea" label="Resumen" wire:model="summary" />
-                    <flux:input type="textarea" label="Descripción" wire:model="description" />
-                </div>
+                    <div class="space-y-6">
+                        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Multimedia</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                            Adjunta los archivos que acompañarán al procedimiento.
+                        </p>
+
+                        <div class="space-y-6">
+                            <div>
+                                <flux:label for="main_image">Imagen principal (flyer)</flux:label>
+                                <flux:input type="file" id="main_image" wire:model="main_image" accept="image/*" />
+                                @error('main_image')
+                                    <flux:text class="text-red-500 text-sm">{{ $message }}</flux:text>
+                                @enderror
+                                @if ($main_image)
+                                    <div class="mt-3">
+                                        <img src="{{ $main_image->temporaryUrl() }}" alt="Vista previa flyer"
+                                            class="w-32 h-32 object-cover rounded border border-gray-200 dark:border-gray-700">
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div>
+                                <flux:label for="gallery_images">Galería de imágenes</flux:label>
+                                <flux:input type="file" id="gallery_images" wire:model="gallery_images" accept="image/*" multiple />
+                                @error('gallery_images')
+                                    <flux:text class="text-red-500 text-sm">{{ $message }}</flux:text>
+                                @enderror
+                                @if ($gallery_images)
+                                    <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                        @foreach ($gallery_images as $image)
+                                            <img src="{{ $image->temporaryUrl() }}" alt="Vista previa galería"
+                                                class="w-24 h-24 object-cover rounded border border-gray-200 dark:border-gray-700">
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div>
+                                <flux:label for="procedure_video">Video del procedimiento</flux:label>
+                                <flux:input type="file" id="procedure_video" wire:model="procedure_video"
+                                    accept="video/mp4,video/quicktime" />
+                                @error('procedure_video')
+                                    <flux:text class="text-red-500 text-sm">{{ $message }}</flux:text>
+                                @enderror
+                                @if ($procedure_video)
+                                    <div class="mt-3 flex items-center text-sm text-gray-600 dark:text-gray-300">
+                                        <x-heroicon-o-play class="w-4 h-4 mr-2" />
+                                        {{ $procedure_video->getClientOriginalName() }}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3">
+                        <flux:button variant="ghost" type="button" wire:click="resetForm">
+                            Cancelar
+                        </flux:button>
+                        <flux:button type="submit" variant="primary" class="cursor-pointer">
+                            <x-heroicon-o-cloud-arrow-up class="w-4 h-4 mr-2" />
+                            Guardar procedimiento
+                        </flux:button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
-    <div class="flex justify-end">
-        <flux:button variant="primary" wire:click="create">
-            <i class="fas fa-save mr-1"></i>
-            Guardar
-        </flux:button>
     </div>
 </div>

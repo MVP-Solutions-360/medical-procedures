@@ -12,6 +12,8 @@ class Procedure extends Model
         'category',
         'summary',
         'description',
+        'featured_image_path',
+        'video_path',
         'anesthesia',
         'surgery_time_min',
         'surgery_time_max',
