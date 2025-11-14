@@ -1,4 +1,4 @@
-﻿@php
+@php
     use Illuminate\Support\Facades\Storage;
     use Illuminate\Support\Str;
 
@@ -65,7 +65,7 @@
             <div class="mt-3 flex flex-wrap gap-2">
                 <span
                     class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200">
-                    {{ $procedure->category ?? 'Sin categor├¡a' }}
+                    {{ $procedure->category ?? 'Sin categor+�a' }}
                 </span>
                 <span
                     class="px-3 py-1 rounded-full text-xs font-semibold {{ $riskClasses[$riskLevel] ?? $riskClasses['medio'] }}">
@@ -109,12 +109,12 @@
                     </div>
                 @endif
                 <div class="p-6 space-y-4">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Descripci├│n general</h2>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Descripci+�n general</h2>
                     <p class="text-gray-600 dark:text-gray-300 leading-relaxed">
-                        {{ $procedure->summary ?? 'A├║n no se ha definido un resumen.' }}
+                        {{ $procedure->summary ?? 'A+�n no se ha definido un resumen.' }}
                     </p>
                     <div class="prose prose-gray dark:prose-invert max-w-none text-sm leading-6">
-                        {!! nl2br(e($procedure->description ?? 'Sin descripci├│n detallada.')) !!}
+                        {!! nl2br(e($procedure->description ?? 'Sin descripci+�n detallada.')) !!}
                     </div>
                 </div>
             </div>
@@ -123,18 +123,18 @@
 
         <div class="space-y-6">
             <div class="procedure-card p-6 space-y-4">
-                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Detalles cl├¡nicos</h3>
+                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Detalles cl+�nicos</h3>
                 <dl class="grid grid-cols-1 gap-3 text-sm text-gray-600 dark:text-gray-300">
                     <div class="flex justify-between">
                         <dt class="font-medium text-gray-500 dark:text-gray-400">Anestesia</dt>
                         <dd>{{ $procedure->anesthesia ?? 'No definida' }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="font-medium text-gray-500 dark:text-gray-400">Hospitalizaci├│n</dt>
+                        <dt class="font-medium text-gray-500 dark:text-gray-400">Hospitalizaci+�n</dt>
                         <dd>{{ $procedure->hospitalization ?? 'No aplica' }}</dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="font-medium text-gray-500 dark:text-gray-400">Tiempo de cirug├¡a</dt>
+                        <dt class="font-medium text-gray-500 dark:text-gray-400">Tiempo de cirug+�a</dt>
                         <dd>
                             @if ($procedure->surgery_time_min || $procedure->surgery_time_max)
                                 {{ $procedure->surgery_time_min ?? '?' }} - {{ $procedure->surgery_time_max ?? '?' }}
@@ -145,7 +145,7 @@
                         </dd>
                     </div>
                     <div class="flex justify-between">
-                        <dt class="font-medium text-gray-500 dark:text-gray-400">Recuperaci├│n inicial</dt>
+                        <dt class="font-medium text-gray-500 dark:text-gray-400">Recuperaci+�n inicial</dt>
                         <dd>{{ $procedure->initial_recovery_weeks ? $procedure->initial_recovery_weeks . ' semanas' : 'Sin definir' }}
                         </dd>
                     </div>
@@ -161,7 +161,8 @@
                 <div class="flex items-center justify-between mb-4">
                     <div>
                         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Metadatos</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Informaci├│n adicional para cat├ílogos y SEO.
+                        <p class="text-sm text-gray-500 dark:text-gray-400">Informaci+�n adicional para cat+�logos y
+                            SEO.
                         </p>
                     </div>
                     <flux:button variant="ghost" size="sm"
@@ -174,10 +175,10 @@
                     @forelse ($procedure->metadata as $meta)
                         <span
                             class="px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200">
-                            {{ $meta->key ?? 'Meta' }}: <span class="font-semibold">{{ $meta->value ?? 'ÔÇö' }}</span>
+                            {{ $meta->key ?? 'Meta' }}: <span class="font-semibold">{{ $meta->value ?? '���' }}</span>
                         </span>
                     @empty
-                        <p class="text-sm text-gray-500 dark:text-gray-400">No registraste metadatos a├║n.</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">No registraste metadatos a+�n.</p>
                     @endforelse
                 </div>
             </div>
@@ -188,17 +189,17 @@
         <div class="flex items-center justify-between mb-4">
             <div>
                 <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Multimedia</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400">Carrusel de im├ígenes y video del
+                <p class="text-sm text-gray-500 dark:text-gray-400">Carrusel de im+�genes y video del
                     procedimiento.</p>
             </div>
         </div>
-        <div class="grid grid-cols-2 xl:grid-cols-2 gap-6">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
             {{-- <div class="relative" x-data="{ active: 0, slides: @js($gallerySlides) }">
                 <template x-if="slides.length === 0">
                     <div
                         class="h-60 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-xl text-gray-500 dark:text-gray-400">
                         <x-heroicon-o-photo class="w-8 h-8 mr-2" />
-                        No hay im├ígenes en la galer├¡a.
+                        No hay im+�genes en la galer+�a.
                     </div>
                 </template>
                 <template x-if="slides.length > 0">
@@ -237,36 +238,36 @@
                     Actualizado el {{ $procedure->updated_at?->translatedFormat('d M Y') ?? 'N/A' }}.
                 </p>
             </div> --}}
-            <div class="py-2">
+            <div class="py-2 sm:col-span-3 lg:col-span-2 xl:col-span-2 gap-6">
                 @if ($videoSource)
-                    <div class="relative rounded-xl overflow-hidden bg-black">
-                        <video controls class="w-full h-120 object-cover">
+                    <div class="relative w-full overflow-hidden rounded-xl bg-black" style="padding-top: 56.25%;">
+                        <video controls class="absolute top-0 left-0 w-full h-full object-cover rounded-xl">
                             <source src="{{ $videoSource }}" type="video/mp4">
-                            Tu navegador no soporta la reproducci├│n de video.
+                            Tu navegador no soporta la reproducción de video.
                         </video>
                     </div>
                 @else
                     <div
                         class="h-60 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-xl text-gray-500 dark:text-gray-400">
                         <x-heroicon-o-play class="w-8 h-8 mr-2" />
-                        A├║n no se ha cargado un video.
+                        A+�n no se ha cargado un video.
                     </div>
                 @endif
                 {{-- <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">
                     Actualizado el {{ $procedure->updated_at?->translatedFormat('d M Y') ?? 'N/A' }}.
                 </p> --}}
             </div>
-            <div>
+            <div class="py-2 sm:col-span-3 lg:col-span-1 xl:col-span-1 gap-6">
                 @if ($procedure->images->count())
                     <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3">
                         @foreach ($procedure->images as $image)
-@once
-    @push('styles')
-        <link rel="stylesheet" href="{{ asset('css/procedures.css') }}">
-    @endpush
-@endonce
+                            @once
+                                @push('styles')
+                                    <link rel="stylesheet" href="{{ asset('css/procedures.css') }}">
+                                @endpush
+                            @endonce
 
-@php
+                            @php
                                 $baseUrl = Storage::url($image->url);
                             @endphp
                             <button type="button"
@@ -296,11 +297,12 @@
                 <template x-if="slides.length">
                     <img :src="slides[activeIndex]?.url"
                         :alt="slides[activeIndex]?.description ?? 'Imagen del procedimiento'"
-                        class="w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl" loading="lazy" />
+                        class="w-full max-h-[80vh] object-cover rounded-xl rounded-2xl shadow-2xl" loading="lazy" />
                 </template>
                 <button type="button" class="absolute inset-y-0 left-0 px-4 focus:outline-none" @click="prev()"
                     x-show="slides.length > 1">
-                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-black/60 text-white">
+                    <span
+                        class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-black/60 text-white">
                         <x-heroicon-o-chevron-left class="w-6 h-6" />
                     </span>
                 </button>
@@ -313,7 +315,7 @@
                 </button>
             </div>
             <p class="text-center text-sm text-white/80"
-                x-text="slides[activeIndex]?.description ?? 'Sin descripci├│n'"></p>
+                x-text="slides[activeIndex]?.description ?? 'Sin descripci+�n'"></p>
         </div>
     </div>
 
@@ -322,7 +324,7 @@
             <div>
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Elementos relacionados</h2>
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Gestiona secciones, indicaciones y demás componentes del procedimiento desde aquí.
+                    Gestiona secciones, indicaciones y dem�s componentes del procedimiento desde aqu�.
                 </p>
             </div>
         </div>
@@ -336,12 +338,15 @@
                     'type' => 'sections',
                     'create_route' => route('sections.create', $procedure),
                     'manage_route' => $procedure->sections->isNotEmpty()
-                        ? route('sections.index', ['procedure' => $procedure, 'section' => $procedure->sections->first()])
+                        ? route('sections.index', [
+                            'procedure' => $procedure,
+                            'section' => $procedure->sections->first(),
+                        ])
                         : route('sections.index', $procedure),
                 ],
                 [
-                    'title' => 'Técnicas',
-                    'description' => 'Métodos o tecnologías empleadas.',
+                    'title' => 'T�cnicas',
+                    'description' => 'M�todos o tecnolog�as empleadas.',
                     'items' => $procedure->techniques,
                     'type' => 'techniques',
                     'create_route' => route('sections.create', $procedure),
@@ -369,14 +374,14 @@
                 ],
                 [
                     'title' => 'Extras',
-                    'description' => 'Información complementaria (FAQ, tips).',
+                    'description' => 'Informaci�n complementaria (FAQ, tips).',
                     'items' => $procedure->extras,
                     'type' => 'extras',
                     'create_route' => route('sections.create', $procedure),
                 ],
                 [
                     'title' => 'Indicaciones',
-                    'description' => 'Criterios clínicos y motivos.',
+                    'description' => 'Criterios cl�nicos y motivos.',
                     'items' => $procedure->indications,
                     'type' => 'indications',
                     'create_route' => route('sections.create', $procedure),
@@ -410,7 +415,7 @@
                     <div class="flex-1 space-y-4 overflow-hidden max-h-64 overflow-y-auto pr-1">
                         @forelse ($visibleItems as $item)
                             @php
-                                $heading = $item->title ?? ($item->name ?? ($item->label ?? 'Sin t├¡tulo'));
+                                $heading = $item->title ?? ($item->name ?? ($item->label ?? 'Sin t+�tulo'));
                                 $body =
                                     $item->summary ??
                                     ($item->description ?? ($item->content ?? ($item->value ?? null)));
@@ -440,7 +445,8 @@
                                 <div
                                     class="rounded-xl border border-gray-100 dark:border-gray-800 p-3 bg-gray-50/70 dark:bg-gray-800/50">
                                     <div class="flex items-center justify-between gap-3">
-                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $heading }}
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                                            {{ $heading }}
                                         </p>
                                         @if (isset($item->order) && $item->order)
                                             <span
@@ -455,7 +461,7 @@
                             @endif
                         @empty
                             <p class="text-sm text-gray-500 dark:text-gray-400">
-                                Aún no registras elementos en esta sección.
+                                A�n no registras elementos en esta secci�n.
                             </p>
                         @endforelse
                     </div>
@@ -473,7 +479,7 @@
                                         <div>
                                             <p
                                                 class="text-sm font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide">
-                                                Sección del procedimiento
+                                                Secci�n del procedimiento
                                             </p>
                                             <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
                                                 {{ $section->title }}
@@ -487,11 +493,12 @@
                                         @endif
                                     </div>
                                     <div>
-                                        <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide">
+                                        <h3
+                                            class="text-sm font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide">
                                             Resumen
                                         </h3>
                                         <p class="mt-2 text-base text-gray-800 dark:text-gray-200">
-                                            {{ $mainContent ?? 'Sin descripción registrada.' }}
+                                            {{ $mainContent ?? 'Sin descripci�n registrada.' }}
                                         </p>
                                     </div>
 
@@ -515,7 +522,7 @@
                                     <div class="flex justify-end">
                                         <flux:button variant="ghost"
                                             href="{{ route('sections.show', ['procedure' => $procedure, 'section' => $section]) }}">
-                                            Ver página completa
+                                            Ver p�gina completa
                                         </flux:button>
                                     </div>
                                 </div>
@@ -528,3 +535,5 @@
     </div>
     <livewire:procedures.sections.create-sections :procedure="$procedure" />
 </div>
+
+
