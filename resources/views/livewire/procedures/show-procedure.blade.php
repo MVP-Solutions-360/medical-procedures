@@ -386,6 +386,10 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             @foreach ($relationBlocks as $block)
+                @php
+                    $isSectionBlock = $block['type'] === 'sections';
+                    $visibleItems = $block['items'];
+                @endphp
                 <div class="procedure-card p-5 flex flex-col">
                     <div class="flex items-start justify-between mb-4">
                         <div>
@@ -404,28 +408,51 @@
                         </div>
                     </div>
                     <div class="flex-1 space-y-4 overflow-hidden max-h-64 overflow-y-auto pr-1">
-                        @forelse ($block['items']->take(4) as $item)
+                        @forelse ($visibleItems as $item)
                             @php
                                 $heading = $item->title ?? ($item->name ?? ($item->label ?? 'Sin t├¡tulo'));
                                 $body =
                                     $item->summary ??
                                     ($item->description ?? ($item->content ?? ($item->value ?? null)));
                             @endphp
-                            <div
-                                class="rounded-xl border border-gray-100 dark:border-gray-800 p-3 bg-gray-50/70 dark:bg-gray-800/50">
-                                <div class="flex items-center justify-between gap-3">
-                                    <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $heading }}
-                                    </p>
-                                    @if (isset($item->order) && $item->order)
-                                        <span
-                                            class="text-xs text-gray-500 dark:text-gray-400">#{{ $item->order }}</span>
+                            @if ($isSectionBlock && isset($item->id))
+                                <flux:modal.trigger :name="'section-detail-' . $item->id" class="block">
+                                    <button type="button"
+                                        class="w-full text-left rounded-xl border border-gray-100 dark:border-gray-800 p-3 bg-gray-50/70 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                                        <div class="flex items-center justify-between gap-3">
+                                            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                                                {{ $heading }}
+                                            </p>
+                                            @if (isset($item->order) && $item->order)
+                                                <span class="text-xs text-gray-500 dark:text-gray-400">
+                                                    #{{ $item->order }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                        @if ($body)
+                                            <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                                                {{ Str::limit($body, 140) }}
+                                            </p>
+                                        @endif
+                                    </button>
+                                </flux:modal.trigger>
+                            @else
+                                <div
+                                    class="rounded-xl border border-gray-100 dark:border-gray-800 p-3 bg-gray-50/70 dark:bg-gray-800/50">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <p class="text-sm font-semibold text-gray-900 dark:text-white">{{ $heading }}
+                                        </p>
+                                        @if (isset($item->order) && $item->order)
+                                            <span
+                                                class="text-xs text-gray-500 dark:text-gray-400">#{{ $item->order }}</span>
+                                        @endif
+                                    </div>
+                                    @if ($body)
+                                        <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                                            {{ Str::limit($body, 140) }}</p>
                                     @endif
                                 </div>
-                                @if ($body)
-                                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
-                                        {{ Str::limit($body, 140) }}</p>
-                                @endif
-                            </div>
+                            @endif
                         @empty
                             <p class="text-sm text-gray-500 dark:text-gray-400">
                                 Aún no registras elementos en esta sección.
@@ -433,6 +460,69 @@
                         @endforelse
                     </div>
                 </div>
+
+                @if ($isSectionBlock)
+                    @foreach ($visibleItems as $section)
+                        @if (isset($section->id))
+                            @php
+                                $mainContent = optional($section->contents->first())->content;
+                            @endphp
+                            <flux:modal name="section-detail-{{ $section->id }}" class="w-full max-w-2xl">
+                                <div class="procedure-card__body space-y-6">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <div>
+                                            <p
+                                                class="text-sm font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide">
+                                                Sección del procedimiento
+                                            </p>
+                                            <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                                {{ $section->title }}
+                                            </h2>
+                                        </div>
+                                        @if (isset($section->order))
+                                            <span
+                                                class="inline-flex px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                                                #{{ $section->order }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide">
+                                            Resumen
+                                        </h3>
+                                        <p class="mt-2 text-base text-gray-800 dark:text-gray-200">
+                                            {{ $mainContent ?? 'Sin descripción registrada.' }}
+                                        </p>
+                                    </div>
+
+                                    @if ($section->contents && $section->contents->count() > 1)
+                                        <div class="space-y-3">
+                                            <h3
+                                                class="text-sm font-semibold text-gray-500 dark:text-gray-300 uppercase tracking-wide">
+                                                Contenido adicional
+                                            </h3>
+                                            @foreach ($section->contents->skip(1) as $content)
+                                                <div
+                                                    class="p-3 rounded-xl border border-gray-100 dark:border-gray-700 bg-gray-50/80 dark:bg-gray-800/40">
+                                                    <p class="text-sm text-gray-700 dark:text-gray-200">
+                                                        {{ Str::of($content->content)->limit(250) }}
+                                                    </p>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+
+                                    <div class="flex justify-end">
+                                        <flux:button variant="ghost"
+                                            href="{{ route('sections.show', ['procedure' => $procedure, 'section' => $section]) }}">
+                                            Ver página completa
+                                        </flux:button>
+                                    </div>
+                                </div>
+                            </flux:modal>
+                        @endif
+                    @endforeach
+                @endif
             @endforeach
         </div>
     </div>

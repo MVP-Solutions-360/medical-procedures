@@ -9,12 +9,12 @@ use Livewire\Component;
 class ShowSections extends Component
 {
     public $procedure;
-    public $procedureSection;
+    public $section;
 
-    public function mount(Procedure $procedure, ProcedureSection $procedureSection)
+    public function mount(Procedure $procedure, ProcedureSection $section)
     {
         $this->procedure = $procedure;
-        $this->procedureSection = $procedureSection;
+        $this->section = $section->load('contents');
     }
 
     public function render()

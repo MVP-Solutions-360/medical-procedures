@@ -12,7 +12,7 @@ class ShowProcedure extends Component
     public function mount(Procedure $procedure): void
     {
         $this->procedure = $procedure->load([
-            'sections',
+            'sections.contents',
             'techniques',
             'indications',
             'preop',
