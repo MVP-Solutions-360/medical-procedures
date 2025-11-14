@@ -115,7 +115,7 @@ class EditProcedure extends Component
     public function updateVideo(): void
     {
         $this->validate([
-            'videoUpload' => 'required|mimetypes:video/mp4,video/quicktime|max:20480',
+            'videoUpload' => 'required|mimetypes:video/mp4,video/quicktime',
         ]);
 
         $path = $this->videoUpload->store('procedures/videos', 'public');

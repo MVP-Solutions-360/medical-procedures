@@ -26,7 +26,7 @@ class CreateProcedure extends Component
     public $risk_level;
     public $is_active = true;
     public $main_image;
-    public $gallery_images = [];
+    public array $gallery_images = [];
     public $procedure_video;
 
     public $sections = [];
@@ -60,7 +60,7 @@ class CreateProcedure extends Component
             'main_image' => 'nullable|image|max:2048',
             'gallery_images' => 'nullable|array',
             'gallery_images.*' => 'image|max:2048',
-            'procedure_video' => 'nullable|mimetypes:video/mp4,video/quicktime|max:20480',
+            'procedure_video' => 'nullable|mimetypes:video/mp4,video/quicktime',
         ];
     }
 

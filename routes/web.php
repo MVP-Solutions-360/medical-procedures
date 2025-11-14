@@ -32,3 +32,4 @@ Route::middleware(['auth'])->group(function () {
 });
 
 require __DIR__.'/modulos/procedures.php';
+require __DIR__.'/modulos/sections.php';

@@ -23,7 +23,28 @@
         : 'bg-slate-100 text-slate-700 dark:bg-slate-800/60 dark:text-slate-200';
 @endphp
 
-<div class="space-y-8">
+<div class="space-y-8" x-data="{
+    showModal: false,
+    activeIndex: 0,
+    slides: @js($gallerySlides),
+    open(index) {
+        this.activeIndex = index;
+        this.showModal = true;
+        document.body.classList.add('overflow-hidden');
+    },
+    close() {
+        this.showModal = false;
+        document.body.classList.remove('overflow-hidden');
+    },
+    next() {
+        if (!this.slides.length) return;
+        this.activeIndex = (this.activeIndex + 1) % this.slides.length;
+    },
+    prev() {
+        if (!this.slides.length) return;
+        this.activeIndex = this.activeIndex === 0 ? this.slides.length - 1 : this.activeIndex - 1;
+    },
+}">
 
     <flux:breadcrumbs>
         <flux:breadcrumbs.item href="{{ route('dashboard') }}">Dashboard</flux:breadcrumbs.item>
@@ -175,8 +196,8 @@
                     procedimiento.</p>
             </div>
         </div>
-        <div class="grid grid-cols-3 xl:grid-cols-3 gap-6">
-            <div class="relative" x-data="{ active: 0, slides: @js($gallerySlides) }">
+        <div class="grid grid-cols-2 xl:grid-cols-2 gap-6">
+            {{-- <div class="relative" x-data="{ active: 0, slides: @js($gallerySlides) }">
                 <template x-if="slides.length === 0">
                     <div
                         class="h-60 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-xl text-gray-500 dark:text-gray-400">
@@ -196,12 +217,16 @@
                         <button type="button"
                             class="absolute inset-y-0 left-0 px-3 text-white/90 hover:text-white focus:outline-none"
                             @click="active = active === 0 ? slides.length - 1 : active - 1" x-show="slides.length > 1">
-                            <x-heroicon-o-chevron-left class="w-7 h-7 drop-shadow" />
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-black/60 text-white">
+                        <x-heroicon-o-chevron-left class="w-5 h-5" />
+                    </span>
                         </button>
                         <button type="button"
                             class="absolute inset-y-0 right-0 px-3 text-white/90 hover:text-white focus:outline-none"
                             @click="active = (active + 1) % slides.length" x-show="slides.length > 1">
-                            <x-heroicon-o-chevron-right class="w-7 h-7 drop-shadow" />
+                    <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-black/60 text-white">
+                        <x-heroicon-o-chevron-right class="w-5 h-5" />
+                    </span>
                         </button>
                         <div class="absolute bottom-3 inset-x-0 flex justify-center gap-2">
                             <template x-for="(slide, index) in slides" :key="'dot-' + index">
@@ -212,7 +237,10 @@
                         </div>
                     </div>
                 </template>
-            </div>
+                <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                    Actualizado el {{ $procedure->updated_at?->translatedFormat('d M Y') ?? 'N/A' }}.
+                </p>
+            </div> --}}
             <div class="py-2">
                 @if ($videoSource)
                     <div class="relative rounded-xl overflow-hidden bg-black">
@@ -228,23 +256,62 @@
                         Aún no se ha cargado un video.
                     </div>
                 @endif
-                <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">
+                {{-- <p class="mt-3 text-xs text-gray-500 dark:text-gray-400">
                     Actualizado el {{ $procedure->updated_at?->translatedFormat('d M Y') ?? 'N/A' }}.
-                </p>
+                </p> --}}
             </div>
             <div>
                 @if ($procedure->images->count())
                     <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 gap-3">
                         @foreach ($procedure->images as $image)
-                            <div class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                                <img src="{{ Storage::url($image->url) }}" alt="Imagen"
-                                    class="h-24 w-full object-cover">
-                            </div>
+                            @php
+                                $baseUrl = Storage::url($image->url);
+                            @endphp
+                            <button type="button"
+                                class="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                                @click="open({{ $loop->index }})">
+                                <picture>
+                                    <source media="(min-width: 1024px)" srcset="{{ $baseUrl }}?w=1024&fit=crop">
+                                    <source media="(min-width: 768px)" srcset="{{ $baseUrl }}?w=768&fit=crop">
+                                    <img src="{{ $baseUrl }}" alt="Imagen del procedimiento"
+                                        class="h-24 w-full object-cover" loading="lazy">
+                                </picture>
+                            </button>
                         @endforeach
                     </div>
                 @endif
-
             </div>
+        </div>
+    </div>
+
+    <div x-show="showModal" x-transition.opacity x-cloak
+        class="fixed inset-0 z-50 bg-black/80 flex items-center justify-center px-4 py-6" @click.self="close()">
+        <button type="button" class="absolute top-4 right-4 text-white hover:text-gray-200" @click="close()">
+            <x-heroicon-o-x-mark class="w-8 h-8" />
+        </button>
+        <div class="max-w-5xl w-full space-y-4">
+            <div class="relative">
+                <template x-if="slides.length">
+                    <img :src="slides[activeIndex]?.url"
+                        :alt="slides[activeIndex]?.description ?? 'Imagen del procedimiento'"
+                        class="w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl" loading="lazy" />
+                </template>
+                <button type="button" class="absolute inset-y-0 left-0 px-4 focus:outline-none" @click="prev()"
+                    x-show="slides.length > 1">
+                    <span class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-black/60 text-white">
+                        <x-heroicon-o-chevron-left class="w-6 h-6" />
+                    </span>
+                </button>
+                <button type="button" class="absolute inset-y-0 right-0 px-4 focus:outline-none" @click="next()"
+                    x-show="slides.length > 1">
+                    <span
+                        class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-black/60 text-white">
+                        <x-heroicon-o-chevron-right class="w-6 h-6" />
+                    </span>
+                </button>
+            </div>
+            <p class="text-center text-sm text-white/80"
+                x-text="slides[activeIndex]?.description ?? 'Sin descripción'"></p>
         </div>
     </div>
 
@@ -261,52 +328,60 @@
         @php
             $relationBlocks = [
                 [
-                    'title' => 'Secciones',
+                    'title' => 'Preguntas y respuestas',
                     'description' => 'Estructura narrativa del procedimiento.',
                     'items' => $procedure->sections,
                     'type' => 'sections',
+                    'create_route' => route('sections.create', $procedure),
                 ],
                 [
                     'title' => 'Técnicas',
                     'description' => 'Métodos o tecnologías empleadas.',
                     'items' => $procedure->techniques,
                     'type' => 'techniques',
-                ],
-                [
-                    'title' => 'Indicaciones',
-                    'description' => 'Criterios clínicos y motivos.',
-                    'items' => $procedure->indications,
-                    'type' => 'indications',
-                ],
-                [
-                    'title' => 'Cuidados preoperatorios',
-                    'description' => 'Recomendaciones antes del procedimiento.',
-                    'items' => $procedure->preop,
-                    'type' => 'preop',
-                ],
-                [
-                    'title' => 'Cuidados postoperatorios',
-                    'description' => 'Seguimiento posterior y cuidados.',
-                    'items' => $procedure->postop,
-                    'type' => 'postop',
-                ],
-                [
-                    'title' => 'Extras',
-                    'description' => 'Información complementaria (FAQ, tips).',
-                    'items' => $procedure->extras,
-                    'type' => 'extras',
+                    'create_route' => route('sections.create', $procedure),
                 ],
                 [
                     'title' => 'Riesgos',
                     'description' => 'Posibles complicaciones y alertas.',
                     'items' => $procedure->risks,
                     'type' => 'risks',
+                    'create_route' => route('sections.create', $procedure),
+                ],
+                [
+                    'title' => 'Cuidados preoperatorios',
+                    'description' => 'Recomendaciones antes del procedimiento.',
+                    'items' => $procedure->preop,
+                    'type' => 'preop',
+                    'create_route' => route('sections.create', $procedure),
+                ],
+                [
+                    'title' => 'Cuidados postoperatorios',
+                    'description' => 'Seguimiento posterior y cuidados.',
+                    'items' => $procedure->postop,
+                    'type' => 'postop',
+                    'create_route' => route('sections.create', $procedure),
+                ],
+                [
+                    'title' => 'Extras',
+                    'description' => 'Información complementaria (FAQ, tips).',
+                    'items' => $procedure->extras,
+                    'type' => 'extras',
+                    'create_route' => route('sections.create', $procedure),
+                ],
+                [
+                    'title' => 'Indicaciones',
+                    'description' => 'Criterios clínicos y motivos.',
+                    'items' => $procedure->indications,
+                    'type' => 'indications',
+                    'create_route' => route('sections.create', $procedure),
                 ],
                 [
                     'title' => 'Galería',
                     'description' => 'Administración de imágenes adicionales.',
                     'items' => $procedure->images,
                     'type' => 'images',
+                    'create_route' => route('sections.create', $procedure),
                 ],
             ];
         @endphp
@@ -321,8 +396,11 @@
                             <p class="text-sm text-gray-500 dark:text-gray-400">{{ $block['description'] }}</p>
                         </div>
                         <div class="flex gap-2">
-                            <flux:button variant="ghost" size="sm"
+                            {{-- <flux:button variant="ghost" size="sm"
                                 wire:click="$dispatch('open-add-item', { type: '{{ $block['type'] }}', procedureId: {{ $procedure->id }} })">
+                                <x-heroicon-o-plus class="w-4 h-4" />
+                            </flux:button> --}}
+                            <flux:button variant="ghost" size="sm" :href="$block['create_route']">
                                 <x-heroicon-o-plus class="w-4 h-4" />
                             </flux:button>
                             <flux:button variant="ghost" size="sm" href="#">
