@@ -1,0 +1,125 @@
+.procedure-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.procedure-card {
+    background-color: #ffffff;
+    border-radius: 1.25rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    transition: box-shadow 150ms ease, border-color 150ms ease, transform 160ms ease;
+}
+
+.procedure-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.12);
+}
+
+.dark .procedure-card {
+    background-color: #1f2937;
+    border-color: rgba(148, 163, 184, 0.35);
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.6);
+}
+
+.procedure-card__header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    justify-content: space-between;
+}
+
+.procedure-card__body {
+    padding: 1.5rem;
+}
+
+.procedure-card__title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.dark .procedure-card__title {
+    color: #f8fafc;
+}
+
+.procedure-card__subtitle {
+    font-size: 0.875rem;
+    color: #64748b;
+}
+
+.dark .procedure-card__subtitle {
+    color: #cbd5f5;
+}
+
+.procedure-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.9rem;
+}
+
+.procedure-table thead {
+    background: linear-gradient(90deg, rgba(15, 23, 42, 0.04), rgba(148, 163, 184, 0.12));
+}
+
+.procedure-table th {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: #475569;
+    padding: 0.85rem 1.5rem;
+    text-align: left;
+}
+
+.procedure-table td {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    color: #0f172a;
+    vertical-align: middle;
+}
+
+.procedure-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.procedure-table tbody tr:first-child td {
+    border-top-color: transparent;
+}
+
+.dark .procedure-table thead {
+    background: linear-gradient(90deg, rgba(248, 250, 252, 0.02), rgba(148, 163, 184, 0.08));
+}
+
+.dark .procedure-table th {
+    color: #e2e8f0;
+}
+
+.dark .procedure-table td {
+    border-color: rgba(148, 163, 184, 0.25);
+    color: #f8fafc;
+}
+
+.dark .procedure-table tbody tr:hover {
+    background-color: rgba(248, 250, 252, 0.04);
+}
+
+.procedure-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.procedure-message {
+    font-size: 0.875rem;
+    color: #059669;
+}
+
+.dark .procedure-message {
+    color: #34d399;
+}

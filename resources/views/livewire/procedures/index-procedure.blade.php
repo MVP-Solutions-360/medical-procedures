@@ -1,4 +1,10 @@
-<div>
+@once
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/procedures.css') }}">
+    @endpush
+@endonce
+
+<div class="procedure-layout">
     <flux:breadcrumbs>
         <flux:breadcrumbs.item href="{{ route('dashboard') }}">Dashboard</flux:breadcrumbs.item>
         <flux:breadcrumbs.item :href="route('procedure.index')">
@@ -17,33 +23,33 @@
         </flux:button>
     </div>
     <div class="grid grid-cols-1 gap-4">
-        <div class="bg-white dark:bg-gray-900/40 rounded-xl shadow border border-gray-100 dark:border-gray-800">
-            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+        <div class="procedure-card">
+            <div class="procedure-card__header">
                 <div>
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Procedimientos</h2>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">Listado general de procedimientos registrados.</p>
+                    <h2 class="procedure-card__title">Procedimientos</h2>
+                    <p class="procedure-card__subtitle">Listado general de procedimientos registrados.</p>
                 </div>
             </div>
-            <div class="p-4">
+            <div class="procedure-card__body">
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <thead class="bg-gray-50 dark:bg-gray-700">
+                    <table class="procedure-table">
+                        <thead>
                             <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th>
                                     Procedimiento
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th>
                                     Categoría
                                 </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th>
                                     Riesgo
                                 </th>
-                                <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
+                                <th class="text-right">
                                     Acciones
                                 </th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody>
                             @forelse(($procedures ?? []) as $procedure)
                                 @php
                                     $riskLevel = strtolower($procedure->risk_level ?? '');

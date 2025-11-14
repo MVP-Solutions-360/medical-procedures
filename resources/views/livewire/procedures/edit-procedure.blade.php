@@ -1,8 +1,14 @@
+@once
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/procedures.css') }}">
+    @endpush
+@endonce
+
 @php
     use Illuminate\Support\Facades\Storage;
 @endphp
 
-<div class="space-y-8">
+<div class="procedure-layout">
     <flux:breadcrumbs>
         <flux:breadcrumbs.item href="{{ route('dashboard') }}">Dashboard</flux:breadcrumbs.item>
         <flux:breadcrumbs.item :href="route('procedure.index')">
@@ -44,7 +50,7 @@
         </div>
     @endif
 
-    <div class="bg-white dark:bg-gray-900/40 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6">
+    <div class="procedure-card p-6">
         <form wire:submit.prevent="updateProcedure" class="space-y-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <flux:input type="text" label="Nombre" wire:model.defer="name" />
@@ -99,7 +105,7 @@
         </form>
     </div>
 
-    <div class="bg-white dark:bg-gray-900/40 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 space-y-8">
+    <div class="procedure-card p-6 space-y-8">
         <div>
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Multimedia</h2>
             <p class="text-sm text-gray-500 dark:text-gray-400">Gestiona la imagen principal, la galería y el video.</p>

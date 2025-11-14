@@ -19,6 +19,6 @@ class ProcedureSection extends Model
 
     public function contents()
     {
-        return $this->hasMany(ProcedureSectionContent::class)->orderBy('order');
+        return $this->hasMany(ProcedureSectionContent::class, 'section_id')->orderBy('order');
     }
 }

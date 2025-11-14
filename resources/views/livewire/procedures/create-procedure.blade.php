@@ -1,4 +1,10 @@
-<div>
+@once
+    @push('styles')
+        <link rel="stylesheet" href="{{ asset('css/procedures.css') }}">
+    @endpush
+@endonce
+
+<div class="procedure-layout">
     <flux:breadcrumbs>
         <flux:breadcrumbs.item href="{{ route('dashboard') }}">Dashboard</flux:breadcrumbs.item>
         <flux:breadcrumbs.item :href="route('procedure.index')">
@@ -17,13 +23,13 @@
         </flux:button>
     </div>
     <div class="grid grid-cols-1 gap-4">
-        <div class="bg-white dark:bg-gray-900/40 rounded-xl shadow border border-gray-100 dark:border-gray-800">
-            <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between">
+        <div class="procedure-card">
+            <div class="procedure-card__header">
                 <div>
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Agregar procedimiento</h2>
+                    <h2 class="procedure-card__title">Agregar procedimiento</h2>
                 </div>
             </div>
-            <div class="p-6">
+            <div class="procedure-card__body">
                 <form wire:submit.prevent="create" class="space-y-8">
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                         <flux:input type="text" label="Nombre" wire:model.defer="name" />
