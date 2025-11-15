@@ -319,12 +319,12 @@
         </div>
     </div>
 
-    <div class="space-y-4">
+    <div class="space-y-4 relation-section">
         <div class="flex items-center justify-between">
             <div>
                 <h2 class="text-xl font-semibold text-gray-900 dark:text-white">Elementos relacionados</h2>
                 <p class="text-sm text-gray-500 dark:text-gray-400">
-                    Gestiona secciones, indicaciones y dem�s componentes del procedimiento desde aqu�.
+                    Gestiona secciones, indicaciones y demas componentes del procedimiento desde aqu�.
                 </p>
             </div>
         </div>
@@ -346,7 +346,7 @@
                 ],
                 [
                     'title' => 'T�cnicas',
-                    'description' => 'M�todos o tecnolog�as empleadas.',
+                    'description' => 'Metodos o tecnologias empleadas.',
                     'items' => $procedure->techniques,
                     'type' => 'techniques',
                     'create_route' => route('sections.create', $procedure),
@@ -374,14 +374,14 @@
                 ],
                 [
                     'title' => 'Extras',
-                    'description' => 'Informaci�n complementaria (FAQ, tips).',
+                    'description' => 'Informacion complementaria (FAQ, tips).',
                     'items' => $procedure->extras,
                     'type' => 'extras',
                     'create_route' => route('sections.create', $procedure),
                 ],
                 [
                     'title' => 'Indicaciones',
-                    'description' => 'Criterios cl�nicos y motivos.',
+                    'description' => 'Criterios clinicos y motivos.',
                     'items' => $procedure->indications,
                     'type' => 'indications',
                     'create_route' => route('sections.create', $procedure),
@@ -389,14 +389,14 @@
             ];
         @endphp
 
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div class="relation-section__grid">
             @foreach ($relationBlocks as $block)
                 @php
                     $isSectionBlock = $block['type'] === 'sections';
                     $visibleItems = $block['items'];
                 @endphp
-                <div class="procedure-card p-5 flex flex-col">
-                    <div class="flex items-start justify-between mb-4">
+                <div class="procedure-card p-5 flex flex-col relation-card">
+                    <div class="flex items-start justify-between mb-4 relation-card__header">
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">{{ $block['title'] }}</h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400">{{ $block['description'] }}</p>
@@ -412,10 +412,10 @@
                             </flux:button>
                         </div>
                     </div>
-                    <div class="flex-1 space-y-4 overflow-hidden max-h-64 overflow-y-auto pr-1">
+                    <div class="flex-1 space-y-4 overflow-hidden max-h-64 overflow-y-auto pr-1 relation-card__items">
                         @forelse ($visibleItems as $item)
                             @php
-                                $heading = $item->title ?? ($item->name ?? ($item->label ?? 'Sin t+�tulo'));
+                                $heading = $item->title ?? ($item->name ?? ($item->label ?? 'Sin titulo'));
                                 $body =
                                     $item->summary ??
                                     ($item->description ?? ($item->content ?? ($item->value ?? null)));
@@ -423,7 +423,7 @@
                             @if ($isSectionBlock && isset($item->id))
                                 <flux:modal.trigger :name="'section-detail-' . $item->id" class="block">
                                     <button type="button"
-                                        class="w-full text-left rounded-xl border border-gray-100 dark:border-gray-800 p-3 bg-gray-50/70 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+                                        class="relation-card__item relation-card__item--link w-full text-left rounded-xl border border-gray-100 dark:border-gray-800 p-3 bg-gray-50/70 dark:bg-gray-800/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                                         <div class="flex items-center justify-between gap-3">
                                             <p class="text-sm font-semibold text-gray-900 dark:text-white">
                                                 {{ $heading }}
@@ -443,7 +443,7 @@
                                 </flux:modal.trigger>
                             @else
                                 <div
-                                    class="rounded-xl border border-gray-100 dark:border-gray-800 p-3 bg-gray-50/70 dark:bg-gray-800/50">
+                                    class="relation-card__item rounded-xl border border-gray-100 dark:border-gray-800 p-3 bg-gray-50/70 dark:bg-gray-800/50">
                                     <div class="flex items-center justify-between gap-3">
                                         <p class="text-sm font-semibold text-gray-900 dark:text-white">
                                             {{ $heading }}
@@ -460,8 +460,8 @@
                                 </div>
                             @endif
                         @empty
-                            <p class="text-sm text-gray-500 dark:text-gray-400">
-                                A�n no registras elementos en esta secci�n.
+                            <p class="text-sm text-gray-500 dark:text-gray-400 relation-card__empty">
+                                Aun no registras elementos en esta seccion.
                             </p>
                         @endforelse
                     </div>
@@ -535,5 +535,3 @@
     </div>
     <livewire:procedures.sections.create-sections :procedure="$procedure" />
 </div>
-
-
